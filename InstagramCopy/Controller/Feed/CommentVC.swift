@@ -141,13 +141,15 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
                       "creationDate": creationDate,
                       "uid": uid] as [String : Any]
         
-        COMMENT_REF.child(postId).childByAutoId().updateChildValues(values) { (err, ref) in
-            self.uploadCommentNotificationToServer()
+        let commentRef = COMMENT_REF.child(postId).childByAutoId()
+        let commentId = commentRef.key
+        
+        commentRef.updateChildValues(values) { (err, ref) in
+            self.uploadCommentNotification(withCommentId: commentId)
             
             if commentText.contains("@") {
                 self.uploadMentionNotification(forPostId: postId, withText: commentText, isForComment: true)
             }
-            
             self.commentTextField.text = nil
         }
     }
@@ -185,7 +187,7 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         }
     }
     
-    func uploadCommentNotificationToServer() {
+    func uploadCommentNotification(withCommentId commentId: String) {
         
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         guard let postId = self.post?.postId else { return }
@@ -196,6 +198,7 @@ class CommentVC: UICollectionViewController, UICollectionViewDelegateFlowLayout 
         let values = ["checked": 0,
                       "creationDate": creationDate,
                       "uid": currentUid,
+                      "commentId": commentId,
                       "type": COMMENT_INT_VALUE,
                       "postId": postId] as [String : Any]
         
