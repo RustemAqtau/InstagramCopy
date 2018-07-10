@@ -31,6 +31,22 @@ class MessagesController: UITableViewController {
     
     // MARK: - UITableView
     
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let message = messages[indexPath.row]
+        let chatPartnerId = message.getChatPartnerId()
+        
+        USER_MESSAGES_REF.child(uid).child(chatPartnerId).removeValue { (err, ref) in
+            
+            self.messages.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
+    
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
