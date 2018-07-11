@@ -20,6 +20,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     lazy var containerView: UIView = {
         let containerView = UIView()
+        containerView.backgroundColor = .white
         containerView.frame = CGRect(x: 0, y: 0, width: 100, height: 55)
         
         containerView.addSubview(sendButton)
@@ -186,6 +187,10 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         USER_MESSAGES_REF.child(currentUid).child(user.uid).updateChildValues([messageRef.key: 1])
         
         USER_MESSAGES_REF.child(user.uid).child(currentUid).updateChildValues([messageRef.key: 1])
+        
+        let message = Message(dictionary: messageValues as Dictionary<String, AnyObject>)
+        
+        uploadMessageNotification(forMessage: message)
     }
     
     func observeMessages() {
@@ -207,5 +212,16 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             self.messages.append(message)
             self.collectionView?.reloadData()
         }
+    }
+    
+    func uploadMessageNotification(forMessage message: Message) {
+        guard let fromId = Auth.auth().currentUser?.uid else { return }
+        guard let toId = message.toId else { return }
+        
+        let values = ["fromId": fromId,
+                      "toId": toId,
+                      "messageText": message.messageText] as [String : Any]
+        
+        USER_MESSAGE_NOTIFICATIONS_REF.child(toId).childByAutoId().updateChildValues(values)
     }
 }
