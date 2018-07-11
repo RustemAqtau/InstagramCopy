@@ -20,6 +20,9 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     var viewSinglePost = false
     var post: Post?
     var currentKey: String?
+    var userProfileController: UserProfileVC?
+    
+    // MARK: - Init
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,12 +40,12 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
         // configure logout button
         configureNavigationBar()
         
+        setUserFCMToken()
+        
         // fetch posts
         if !viewSinglePost {
             fetchPosts()
         }
-        
-        updateUserFeeds()
     }
     
     // MARK: - UICollectionViewFlowLayout
@@ -84,6 +87,8 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! FeedCell
         
+        cell.delegate = self
+        
         if viewSinglePost {
             if let post = self.post {
                 cell.post = post
@@ -91,8 +96,6 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
         } else {
             cell.post = posts[indexPath.item]
         }
-        
-        cell.delegate = self
         
         handleHashtagTapped(forCell: cell)
         
@@ -113,7 +116,39 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     }
     
     func handleOptionsTapped(for cell: FeedCell) {
-        print("Handle options tapped..")
+        
+        guard let post = cell.post else { return }
+        
+        if post.ownerUid == Auth.auth().currentUser?.uid {
+            let alertController = UIAlertController(title: "Options", message: nil, preferredStyle: .actionSheet)
+            
+            alertController.addAction(UIAlertAction(title: "Delete Post", style: .destructive, handler: { (_) in
+                post.deletePost()
+                
+                if !self.viewSinglePost {
+                    self.handleRefresh()
+                } else {
+                    if let userProfileController = self.userProfileController {
+                        _ = self.navigationController?.popViewController(animated: true)
+                        userProfileController.handleRefresh()
+                    }
+                }
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Edit Post", style: .default, handler: { (_) in
+                
+                let uploadPostController = UploadPostVC()
+                let navigationController = UINavigationController(rootViewController: uploadPostController)
+                uploadPostController.postToEdit = post
+                uploadPostController.uploadAction = UploadPostVC.UploadAction(index: 1)
+                self.present(navigationController, animated: true, completion: nil)
+                
+            }))
+            
+            alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            
+            present(alertController, animated: true, completion: nil)
+        }
     }
     
     func handleLikeTapped(for cell: FeedCell, isDoubleTap: Bool) {
@@ -157,6 +192,22 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
             if snapshot.hasChild(postId) {
                 post.didLike = true
                 cell.likeButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
+            } else {
+                post.didLike = false
+                cell.likeButton.setImage(#imageLiteral(resourceName: "like_unselected"), for: .normal)
+            }
+        }
+    }
+    
+    func configureCommentIndicatorView(for cell: FeedCell) {
+        guard let post = cell.post else { return }
+        guard let postId = post.postId else { return }
+        
+        COMMENT_REF.child(postId).observeSingleEvent(of: .value) { (snapshot) in
+            if snapshot.exists() {
+                cell.addCommentIndicatorView(toStackView: cell.stackView)
+            } else {
+                cell.commentIndicatorView.isHidden = true
             }
         }
     }
@@ -172,7 +223,9 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     
     @objc func handleRefresh() {
         posts.removeAll(keepingCapacity: false)
+        self.currentKey = nil
         fetchPosts()
+        collectionView?.reloadData()
     }
     
     @objc func handleShowMessages() {
@@ -249,23 +302,14 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     }
     
     // MARK: - API
-
-    func updateUserFeeds() {
+    
+    func setUserFCMToken() {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        guard let fcmToken = Messaging.messaging().fcmToken else { return }
         
-        USER_FOLLOWING_REF.child(currentUid).observe(.childAdded) { (snapshot) in
-            let followingUserId = snapshot.key
-            
-            USER_POSTS_REF.child(followingUserId).observe(.childAdded, with: { (snapshot) in
-                let postId = snapshot.key
-                USER_FEED_REF.child(currentUid).updateChildValues([postId: 1])
-            })
-        }
+        let values = ["fcmToken": fcmToken]
         
-        USER_POSTS_REF.child(currentUid).observe(.childAdded) { (snapshot) in
-            let postId = snapshot.key
-            USER_FEED_REF.child(currentUid).updateChildValues([postId: 1])
-        }
+        USER_REF.child(currentUid).updateChildValues(values)
     }
     
     func fetchPosts() {
@@ -304,9 +348,7 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     }
     
     func fetchPost(withPostId postId: String) {
-        
         Database.fetchPost(with: postId) { (post) in
-            
             self.posts.append(post)
             
             self.posts.sort(by: { (post1, post2) -> Bool in
@@ -315,17 +357,4 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
             self.collectionView?.reloadData()
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
