@@ -16,12 +16,12 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
     // MARK: - Properties
     
     var timer: Timer?
-    
     var notifications = [Notification]()
-
+    var refresher = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // clear separator lines
         tableView.separatorColor = .clear
         
@@ -33,14 +33,17 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
         
         // fetch notifications
         fetchNotifications()
+        
+        // refresh control
+        configureRefreshControl()
     }
-
+    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notifications.count
     }
@@ -48,7 +51,15 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifer, for: indexPath) as! NotificationCell
         
-        cell.notification = notifications[indexPath.row]
+        let notification = notifications[indexPath.row]
+        
+        cell.notification = notification
+        
+        if notification.notificationType == .Comment {
+            if let commentText = notification.commentText {
+                cell.configureNotificationLabel(withCommentText: commentText)
+            }
+        }
         
         cell.delegate = self
         
@@ -64,7 +75,7 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
         navigationController?.pushViewController(userProfileVC, animated: true)
     }
     
-    // MARK: - NotificationCellDelegate Protocol
+    // MARK: - NotificationCellDelegate
     
     func handleFollowTapped(for cell: NotificationCell) {
         
@@ -85,19 +96,27 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
     
     func handlePostTapped(for cell: NotificationCell) {
         guard let post = cell.notification?.post else { return }
+        guard let notification = cell.notification else { return }
         
-        let feedController = FeedVC(collectionViewLayout: UICollectionViewFlowLayout())
-        feedController.viewSinglePost = true
-        feedController.post = post
-        navigationController?.pushViewController(feedController, animated: true)
+        if notification.notificationType == .Comment {
+            let commentController = CommentVC(collectionViewLayout: UICollectionViewFlowLayout())
+            commentController.post = post
+            navigationController?.pushViewController(commentController, animated: true)
+        } else {
+            let feedController = FeedVC(collectionViewLayout: UICollectionViewFlowLayout())
+            feedController.viewSinglePost = true
+            feedController.post = post
+            navigationController?.pushViewController(feedController, animated: true)
+        }
     }
     
     // MARK: - Handlers
     
-    func handleReloadTable() {
-        self.timer?.invalidate()
-        
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(handleSortNotifications), userInfo: nil, repeats: false)
+    @objc func handleRefresh() {
+        self.notifications.removeAll()
+        fetchNotifications()
+        refresher.endRefreshing()
+        self.tableView.reloadData()
     }
     
     @objc func handleSortNotifications() {
@@ -107,7 +126,31 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
         self.tableView.reloadData()
     }
     
+    func handleReloadTable() {
+        self.timer?.invalidate()
+        
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(handleSortNotifications), userInfo: nil, repeats: false)
+    }
+    
+    func configureRefreshControl() {
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        self.tableView.refreshControl = refresher
+    }
+    
     // MARK: - API
+    
+    func getCommentData(forNotification notification: Notification) {
+        
+        guard let postId = notification.postId else { return }
+        guard let commentId = notification.commentId else { return }
+        
+        COMMENT_REF.child(postId).child(commentId).observeSingleEvent(of: .value) { (snapshot) in
+            guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
+            guard let commentText = dictionary["commentText"] as? String else { return }
+            
+            notification.commentText = commentText
+        }
+    }
     
     func fetchNotifications() {
         
@@ -125,6 +168,9 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
                 if let postId = dictionary["postId"] as? String {
                     Database.fetchPost(with: postId, completion: { (post) in
                         let notification = Notification(user: user, post: post, dictionary: dictionary)
+                        if notification.notificationType == .Comment {
+                            self.getCommentData(forNotification: notification)
+                        }
                         self.notifications.append(notification)
                         self.handleReloadTable()
                     })

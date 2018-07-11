@@ -10,5 +10,6 @@ target 'InstagramCopy' do
   pod 'Firebase/Database'
   pod 'Firebase/Storage'
   pod 'ActiveLabel'
+  pod 'Firebase/Messaging'
 
 end

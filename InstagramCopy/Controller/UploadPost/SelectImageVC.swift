@@ -118,6 +118,7 @@ class SelectImageVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     @objc func handleNext() {
         let uploadPostVC = UploadPostVC()
         uploadPostVC.selectedImage = header?.photoImageView.image
+        uploadPostVC.uploadAction = UploadPostVC.UploadAction(index: 0)
         navigationController?.pushViewController(uploadPostVC, animated: true)
     }
     

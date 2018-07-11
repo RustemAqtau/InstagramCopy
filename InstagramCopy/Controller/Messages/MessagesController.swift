@@ -19,6 +19,7 @@ class MessagesController: UITableViewController {
     var messagesDictionary = [String: Message]()
     
     // MARK: - Init
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -30,6 +31,22 @@ class MessagesController: UITableViewController {
     }
     
     // MARK: - UITableView
+    
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard let uid = Auth.auth().currentUser?.uid else { return }
+        let message = messages[indexPath.row]
+        let chatPartnerId = message.getChatPartnerId()
+        
+        USER_MESSAGES_REF.child(uid).child(chatPartnerId).removeValue { (err, ref) in
+            
+            self.messages.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
@@ -43,7 +60,7 @@ class MessagesController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! MessageCell
         
         cell.message = messages[indexPath.row]
-                
+        
         return cell
     }
     
@@ -59,7 +76,7 @@ class MessagesController: UITableViewController {
     
     @objc func handleNewMessage() {
         let newMessageController = NewMessageController()
-        newMessageController.messagesController = self 
+        newMessageController.messagesController = self
         let navigationController = UINavigationController(rootViewController: newMessageController)
         self.present(navigationController, animated: true, completion: nil)
     }

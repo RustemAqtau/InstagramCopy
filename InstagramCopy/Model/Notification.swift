@@ -47,6 +47,8 @@ class Notification {
     var user: User!
     var type: Int?
     var notificationType: NotificationType!
+    var commentId: String?
+    var commentText: String?
     var didCheck = false
     
     init(user: User, post: Post? = nil, dictionary: Dictionary<String, AnyObject>) {
@@ -73,6 +75,10 @@ class Notification {
             self.postId = postId
         }
         
+        if let commentId = dictionary["commentId"] as? String {
+            self.commentId = commentId
+        }
+        
         if let checked = dictionary["checked"] as? Int {
             if checked == 0 {
                 self.didCheck = false
@@ -81,5 +87,4 @@ class Notification {
             }
         }
     }
-    
 }

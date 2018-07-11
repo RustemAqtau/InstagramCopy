@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B08833520263FBD00750C9B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2B08833420263FBD00750C9B /* GoogleService-Info.plist */; };
+		2B05C6A3207E712700FADDCC /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05C6A2207E712700FADDCC /* EditProfileController.swift */; };
+		2B05C6A6207E8F3000FADDCC /* CommentInputAccesoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05C6A5207E8F3000FADDCC /* CommentInputAccesoryView.swift */; };
+		2B05C6A8207E8F4900FADDCC /* CommentInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05C6A7207E8F4900FADDCC /* CommentInputTextView.swift */; };
 		2B0883372028D3D400750C9B /* MainTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0883362028D3D400750C9B /* MainTabVC.swift */; };
 		2B0883392028D5C900750C9B /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0883382028D5C900750C9B /* FeedVC.swift */; };
 		2B08833B2028D5DF00750C9B /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B08833A2028D5DF00750C9B /* SearchVC.swift */; };
@@ -26,6 +28,7 @@
 		2B08836B202E041600750C9B /* SelectPhotoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B08836A202E041600750C9B /* SelectPhotoHeader.swift */; };
 		2B40D4C6203C8BCD004CC403 /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B40D4C5203C8BCD004CC403 /* NotificationCell.swift */; };
 		2B40D4C8203D01DB004CC403 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B40D4C7203D01DB004CC403 /* Notification.swift */; };
+		2B40EE3F20F65EA6003402BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2B40EE3E20F65EA5003402BF /* GoogleService-Info.plist */; };
 		2B4E2D19206C24CE00940036 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D18206C24CE00940036 /* MessagesController.swift */; };
 		2B4E2D1C206C265E00940036 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D1B206C265E00940036 /* MessageCell.swift */; };
 		2B4E2D1E206C325400940036 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D1D206C325400940036 /* NewMessageController.swift */; };
@@ -54,7 +57,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2B08833420263FBD00750C9B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		2B05C6A2207E712700FADDCC /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
+		2B05C6A5207E8F3000FADDCC /* CommentInputAccesoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputAccesoryView.swift; sourceTree = "<group>"; };
+		2B05C6A7207E8F4900FADDCC /* CommentInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputTextView.swift; sourceTree = "<group>"; };
+		2B05C6A9207EA1E200FADDCC /* InstagramCopy.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = InstagramCopy.entitlements; sourceTree = "<group>"; };
 		2B0883362028D3D400750C9B /* MainTabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabVC.swift; sourceTree = "<group>"; };
 		2B0883382028D5C900750C9B /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		2B08833A2028D5DF00750C9B /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
@@ -73,6 +79,7 @@
 		2B08836A202E041600750C9B /* SelectPhotoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotoHeader.swift; sourceTree = "<group>"; };
 		2B40D4C5203C8BCD004CC403 /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		2B40D4C7203D01DB004CC403 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		2B40EE3E20F65EA5003402BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Documents/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2B4E2D18206C24CE00940036 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
 		2B4E2D1B206C265E00940036 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		2B4E2D1D206C325400940036 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
@@ -133,11 +140,21 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		2B05C6A4207E8F0D00FADDCC /* Comments */ = {
+			isa = PBXGroup;
+			children = (
+				2B9B185E20376B0F00B52A0D /* CommentVC.swift */,
+				2B05C6A5207E8F3000FADDCC /* CommentInputAccesoryView.swift */,
+				2B05C6A7207E8F4900FADDCC /* CommentInputTextView.swift */,
+			);
+			path = Comments;
+			sourceTree = "<group>";
+		};
 		2B0883422028DAEB00750C9B /* Feed */ = {
 			isa = PBXGroup;
 			children = (
+				2B05C6A4207E8F0D00FADDCC /* Comments */,
 				2B0883382028D5C900750C9B /* FeedVC.swift */,
-				2B9B185E20376B0F00B52A0D /* CommentVC.swift */,
 				2B4E2D28206C786D00940036 /* HashtagController.swift */,
 			);
 			path = Feed;
@@ -182,6 +199,7 @@
 			children = (
 				2B0883402028D62700750C9B /* UserProfileVC.swift */,
 				2B088362202CE42E00750C9B /* FollowLikeVC.swift */,
+				2B05C6A2207E712700FADDCC /* EditProfileController.swift */,
 			);
 			path = UserProfile;
 			sourceTree = "<group>";
@@ -245,6 +263,7 @@
 		2BF3A4CA2026268000FC5BA2 /* InstagramCopy */ = {
 			isa = PBXGroup;
 			children = (
+				2B05C6A9207EA1E200FADDCC /* InstagramCopy.entitlements */,
 				2BF3A4E22026282B00FC5BA2 /* Utils */,
 				2BF3A4DF2026269800FC5BA2 /* Model */,
 				2BF3A4DE2026269400FC5BA2 /* View */,
@@ -252,8 +271,8 @@
 				2BF3A4CB2026268000FC5BA2 /* AppDelegate.swift */,
 				2BF3A4CF2026268000FC5BA2 /* Main.storyboard */,
 				2BF3A4D22026268000FC5BA2 /* Assets.xcassets */,
-				2B08833420263FBD00750C9B /* GoogleService-Info.plist */,
 				2BF3A4D42026268000FC5BA2 /* LaunchScreen.storyboard */,
+				2B40EE3E20F65EA5003402BF /* GoogleService-Info.plist */,
 				2BF3A4D72026268000FC5BA2 /* Info.plist */,
 			);
 			path = InstagramCopy;
@@ -342,6 +361,11 @@
 					2BF3A4C72026268000FC5BA2 = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -369,8 +393,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BF3A4D62026268000FC5BA2 /* LaunchScreen.storyboard in Resources */,
+				2B40EE3F20F65EA6003402BF /* GoogleService-Info.plist in Resources */,
 				2BF3A4D32026268000FC5BA2 /* Assets.xcassets in Resources */,
-				2B08833520263FBD00750C9B /* GoogleService-Info.plist in Resources */,
 				2BF3A4D12026268000FC5BA2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -406,6 +430,7 @@
 				"${BUILT_PRODUCTS_DIR}/ActiveLabel/ActiveLabel.framework",
 				"${BUILT_PRODUCTS_DIR}/GTMSessionFetcher/GTMSessionFetcher.framework",
 				"${BUILT_PRODUCTS_DIR}/GoogleToolboxForMac/GoogleToolboxForMac.framework",
+				"${BUILT_PRODUCTS_DIR}/Protobuf/Protobuf.framework",
 				"${BUILT_PRODUCTS_DIR}/leveldb-library/leveldb.framework",
 				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
 			);
@@ -414,6 +439,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ActiveLabel.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GTMSessionFetcher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleToolboxForMac.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Protobuf.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/leveldb.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
 			);
@@ -445,6 +471,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2B088367202E037F00750C9B /* SelectImageVC.swift in Sources */,
+				2B05C6A3207E712700FADDCC /* EditProfileController.swift in Sources */,
 				2B08836B202E041600750C9B /* SelectPhotoHeader.swift in Sources */,
 				2BAB4B9C202E35BF00985674 /* CustomImageView.swift in Sources */,
 				2B088359202BEC4000750C9B /* Protocols.swift in Sources */,
@@ -467,10 +494,12 @@
 				2BAB4B98202E270C00985674 /* UserPostCell.swift in Sources */,
 				2B0883412028D62700750C9B /* UserProfileVC.swift in Sources */,
 				2BF3A4E62026332B00FC5BA2 /* SignUpVC.swift in Sources */,
+				2B05C6A8207E8F4900FADDCC /* CommentInputTextView.swift in Sources */,
 				2BAB4B96202E22F100985674 /* Post.swift in Sources */,
 				2BF3A4E1202626CD00FC5BA2 /* LoginVC.swift in Sources */,
 				2B088365202CE48900750C9B /* FollowLikeCell.swift in Sources */,
 				2B40D4C6203C8BCD004CC403 /* NotificationCell.swift in Sources */,
+				2B05C6A6207E8F3000FADDCC /* CommentInputAccesoryView.swift in Sources */,
 				2B40D4C8203D01DB004CC403 /* Notification.swift in Sources */,
 				2B4E2D22206C377100940036 /* Message.swift in Sources */,
 				2BF3A4E42026283E00FC5BA2 /* Extensions.swift in Sources */,
@@ -620,6 +649,7 @@
 			baseConfigurationReference = C3F115830EF5D637CF531FD7 /* Pods-InstagramCopy.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = InstagramCopy/InstagramCopy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LF78THV97C;
 				INFOPLIST_FILE = InstagramCopy/Info.plist;
@@ -636,6 +666,7 @@
 			baseConfigurationReference = A96665CF33227CCD8C42726F /* Pods-InstagramCopy.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = InstagramCopy/InstagramCopy.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LF78THV97C;
 				INFOPLIST_FILE = InstagramCopy/Info.plist;
