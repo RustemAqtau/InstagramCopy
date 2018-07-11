@@ -28,7 +28,7 @@ exports.observeComments = functions.database.ref('/comments/{postId}/{commentId}
 
           var payload = {
             notification: {
-              body: username + ' commented on your post'
+              body: username + ' commented on your post: ' + comment.commentText
             }
           };
 
