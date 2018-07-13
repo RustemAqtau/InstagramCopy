@@ -18,37 +18,11 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     var user: User?
     var messages = [Message]()
     
-    lazy var containerView: UIView = {
-        let containerView = UIView()
-        containerView.frame = CGRect(x: 0, y: 0, width: 100, height: 55)
-        
-        containerView.addSubview(sendButton)
-        sendButton.anchor(top: nil, left: nil, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 50, height: 0)
-        sendButton.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
-        
-        containerView.addSubview(messageTextField)
-        messageTextField.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: containerView.bottomAnchor, right: sendButton.leftAnchor, paddingTop: 0, paddingLeft: 12, paddingBottom: 0, paddingRight: 8, width: 0, height: 0)
-        
-        let separatorView = UIView()
-        separatorView.backgroundColor = .lightGray
-        containerView.addSubview(separatorView)
-        separatorView.anchor(top: containerView.topAnchor, left: containerView.leftAnchor, bottom: nil, right: containerView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0.5)
-        
+    lazy var containerView: MessageInputAccesoryView = {
+        let frame = CGRect(x: 0, y: 0, width: view.frame.width, height: 50)
+        let containerView = MessageInputAccesoryView(frame: frame)
+        containerView.delegate = self
         return containerView
-    }()
-    
-    let messageTextField: UITextField = {
-        let tf = UITextField()
-        tf.placeholder = "Enter message.."
-        return tf
-    }()
-    
-    let sendButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("Send", for: .normal)
-        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14)
-        button.addTarget(self, action: #selector(handleSend), for: .touchUpInside)
-        return button
     }()
     
     // MARK: - Init
@@ -87,12 +61,15 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     // MARK: - UICollectionView
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
         var height: CGFloat = 80
         
         let message = messages[indexPath.item]
         
-        height = estimateFrameForText(message.messageText).height + 20
+        if let messageText = message.messageText {
+            height = estimateFrameForText(messageText).height + 20
+        } else if let imageWidth = message.imageWidth?.floatValue, let imageHeight = message.imageHeight?.floatValue {
+            height = CGFloat(imageHeight / imageWidth * 200)
+        }
         
         return CGSize(width: view.frame.width, height: height)
     }
@@ -113,17 +90,12 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     // MARK: - Handlers
     
-    @objc func handleSend() {
-        uploadMessageToServer()
-        
-        messageTextField.text = nil
-    }
-    
     @objc func handleInfoTapped() {
         let userProfileController = UserProfileVC(collectionViewLayout: UICollectionViewFlowLayout())
         userProfileController.user = user
         navigationController?.pushViewController(userProfileController, animated: true)
     }
+
     
     func estimateFrameForText(_ text: String) -> CGRect {
         let size = CGSize(width: 200, height: 1000)
@@ -134,8 +106,21 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     func configureMessage(cell: ChatCell, message: Message) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
-        cell.bubbleWidthAnchor?.constant = estimateFrameForText(message.messageText).width + 32
-        cell.frame.size.height = estimateFrameForText(message.messageText).height + 20
+        if let messageText = message.messageText {
+            cell.bubbleWidthAnchor?.constant = estimateFrameForText(messageText).width + 32
+            cell.frame.size.height = estimateFrameForText(messageText).height + 20
+        } else if message.imageUrl != nil {
+            cell.bubbleWidthAnchor?.constant = 200
+        }
+        
+        if let messageImageUrl = message.imageUrl {
+            cell.messageImageView.loadImage(with: messageImageUrl)
+            cell.messageImageView.isHidden = false
+            cell.bubbleView.backgroundColor = .clear
+        } else {
+            cell.messageImageView.isHidden = true
+            cell.bubbleView.backgroundColor  = UIColor.rgb(red: 0, green: 137, blue: 249)
+        }
         
         if message.fromId == currentUid {
             cell.bubbleViewRightAnchor?.isActive = true
@@ -167,25 +152,32 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     // MARK: - API
     
-    func uploadMessageToServer() {
-        
-        guard let messageText = messageTextField.text else { return }
+    func uploadMessageToServer(withImageUrl imageUrl: String? = nil, image: UIImage? = nil, message: String? = nil) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         guard let user = self.user else { return }
         let creationDate = Int(NSDate().timeIntervalSince1970)
+    
+        var isImageMessage: Bool!
+        var messageValues: [String: Any]!
         
-        let messageValues = ["creationDate": creationDate,
-                             "fromId": currentUid,
-                             "toId": user.uid,
-                             "messageText": messageText] as [String: Any]
+        if let imageUrl = imageUrl {
+            isImageMessage = true
+            messageValues = ["creationDate": creationDate, "fromId": currentUid,"toId": user.uid,
+                             "imageUrl": imageUrl, "imageWidth": image?.size.width as Any, "imageHeight": image?.size.height as Any] as [String: Any]
+        } else {
+            isImageMessage = false
+            guard let message = message else { return }
+            messageValues = ["creationDate": creationDate,"fromId": currentUid, "toId": user.uid,
+                             "messageText": message] as [String: Any]
+        }
         
         let messageRef = MESSAGES_REF.childByAutoId()
-        
         messageRef.updateChildValues(messageValues)
         
         USER_MESSAGES_REF.child(currentUid).child(user.uid).updateChildValues([messageRef.key: 1])
-        
         USER_MESSAGES_REF.child(user.uid).child(currentUid).updateChildValues([messageRef.key: 1])
+        let message = Message(dictionary: messageValues as Dictionary<String, AnyObject>)
+        uploadMessageNotification(forMessage: message, isImageMessage: isImageMessage)
     }
     
     func observeMessages() {
@@ -193,9 +185,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         guard let chatPartnerId = self.user?.uid else { return }
         
         USER_MESSAGES_REF.child(currentUid).child(chatPartnerId).observe(.childAdded) { (snapshot) in
-            
             let messageId = snapshot.key
-            
             self.fetchMessage(withMessageId: messageId)
         }
     }
@@ -207,5 +197,65 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             self.messages.append(message)
             self.collectionView?.reloadData()
         }
+    }
+    
+    func uploadMessageNotification(forMessage message: Message, isImageMessage: Bool) {
+        guard let fromId = Auth.auth().currentUser?.uid else { return }
+        guard let toId = message.toId else { return }
+        var messageText: String!
+        
+        if isImageMessage {
+            messageText = "Sent an image"
+        } else {
+            messageText = message.messageText
+        }
+        
+        let values = ["fromId": fromId,
+                      "toId": toId,
+                      "messageText": messageText] as [String : Any]
+        
+        USER_MESSAGE_NOTIFICATIONS_REF.child(toId).childByAutoId().updateChildValues(values)
+    }
+    
+    func uploadImageToStorage(selectedImage image: UIImage) {
+        let filename = NSUUID().uuidString
+        guard let uploadData = UIImageJPEGRepresentation(image, 0.3) else { return }
+        
+        STORAGE_MESSAGE_IMAGES_REF.child(filename).putData(uploadData, metadata: nil) { (metadata, error) in
+            if error != nil {
+                print("DEBUG: Unable to upload image to Firebase Storage")
+                return
+            }
+            
+            guard let imageUrl = metadata?.downloadURL()?.absoluteString else { return }
+            self.uploadMessageToServer(withImageUrl: imageUrl, image: image)
+        }
+    }
+}
+
+// MARK: - UIImagePickerControllerDelegate
+
+extension ChatController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        guard let selectedImage = info[UIImagePickerControllerEditedImage] as? UIImage else { return }
+        uploadImageToStorage(selectedImage: selectedImage)
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+extension ChatController: MessageInputAccesoryViewDelegate {
+    
+    func handleUploadMessage(message: String) {
+        uploadMessageToServer(withImageUrl: nil, image: nil, message: message)
+        
+        self.containerView.clearMessageTextView()
+    }
+    
+    func handleSelectImage() {
+        let imagePickerController = UIImagePickerController()
+        imagePickerController.delegate = self
+        imagePickerController.allowsEditing = true
+        present(imagePickerController, animated: true, completion: nil)
+        
     }
 }
