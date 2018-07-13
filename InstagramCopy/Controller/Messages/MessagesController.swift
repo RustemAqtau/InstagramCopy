@@ -19,6 +19,7 @@ class MessagesController: UITableViewController {
     var messagesDictionary = [String: Message]()
     
     // MARK: - Init
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -27,6 +28,16 @@ class MessagesController: UITableViewController {
         tableView.register(MessageCell.self, forCellReuseIdentifier: reuseIdentifier)
         
         fetchMessages()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        tabBarController?.tabBar.isHidden = false
     }
     
     // MARK: - UITableView
@@ -59,7 +70,7 @@ class MessagesController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! MessageCell
         
         cell.message = messages[indexPath.row]
-                
+        
         return cell
     }
     
@@ -75,7 +86,7 @@ class MessagesController: UITableViewController {
     
     @objc func handleNewMessage() {
         let newMessageController = NewMessageController()
-        newMessageController.messagesController = self 
+        newMessageController.messagesController = self
         let navigationController = UINavigationController(rootViewController: newMessageController)
         self.present(navigationController, animated: true, completion: nil)
     }
@@ -95,7 +106,6 @@ class MessagesController: UITableViewController {
     // MARK: - API
     
     func fetchMessages() {
-        
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
         self.messages.removeAll()
