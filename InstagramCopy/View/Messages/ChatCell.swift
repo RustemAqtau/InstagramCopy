@@ -21,8 +21,9 @@ class ChatCell: UICollectionViewCell {
         
         didSet {
             
-            guard let messageText = message?.messageText else { return }
-            textView.text = messageText
+            if let messageText = message?.messageText {
+                textView.text = messageText
+            }
             
             guard let chatPartnerId = message?.getChatPartnerId() else { return }
             
@@ -44,7 +45,6 @@ class ChatCell: UICollectionViewCell {
     
     let textView: UITextView = {
         let tv = UITextView()
-        tv.text = "Sample text for now"
         tv.font = UIFont.systemFont(ofSize: 16)
         tv.backgroundColor = .clear
         tv.textColor = .white
@@ -61,12 +61,22 @@ class ChatCell: UICollectionViewCell {
         return iv
     }()
     
+    let messageImageView: CustomImageView = {
+        let iv = CustomImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         addSubview(bubbleView)
         addSubview(textView)
         addSubview(profileImageView)
+        
+        bubbleView.addSubview(messageImageView)
+        messageImageView.anchor(top: bubbleView.topAnchor, left: bubbleView.leftAnchor, bottom: bubbleView.bottomAnchor, right: bubbleView.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
         
         profileImageView.anchor(top: nil, left: leftAnchor, bottom: bottomAnchor, right: nil, paddingTop: 0, paddingLeft: 8, paddingBottom: -4, paddingRight: 0, width: 32, height: 32)
         profileImageView.layer.cornerRadius = 32 / 2
