@@ -10,6 +10,11 @@ import Firebase
 
 let DB_REF = Database.database().reference()
 
+let STORAGE_REF = Storage.storage().reference()
+
+let STORAGE_PROFILE_IMAGES_REF = STORAGE_REF.child("profile_images")
+let STORAGE_MESSAGE_IMAGES_REF = STORAGE_REF.child("message_images")
+
 let USER_REF = DB_REF.child("users")
 
 let USER_FOLLOWER_REF = DB_REF.child("user-followers")
@@ -29,6 +34,7 @@ let NOTIFICATIONS_REF = DB_REF.child("notifications")
 
 let MESSAGES_REF = DB_REF.child("messages")
 let USER_MESSAGES_REF = DB_REF.child("user-messages")
+let USER_MESSAGE_NOTIFICATIONS_REF = DB_REF.child("user-message-notifications")
 
 let HASHTAG_POST_REF = DB_REF.child("hashtag-post")
 
