@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2B08833520263FBD00750C9B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2B08833420263FBD00750C9B /* GoogleService-Info.plist */; };
 		2B0883372028D3D400750C9B /* MainTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0883362028D3D400750C9B /* MainTabVC.swift */; };
 		2B0883392028D5C900750C9B /* FeedVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B0883382028D5C900750C9B /* FeedVC.swift */; };
 		2B08833B2028D5DF00750C9B /* SearchVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B08833A2028D5DF00750C9B /* SearchVC.swift */; };
@@ -51,10 +50,10 @@
 		2BF3A4E42026283E00FC5BA2 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF3A4E32026283E00FC5BA2 /* Extensions.swift */; };
 		2BF3A4E62026332B00FC5BA2 /* SignUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF3A4E52026332B00FC5BA2 /* SignUpVC.swift */; };
 		B970655BDF6D4AEAF739F461 /* Pods_InstagramCopy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F47F6D373E77DEEF55D0D5C6 /* Pods_InstagramCopy.framework */; };
+		F64CFD4220FBB87200A22D96 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F64CFD4120FBB87100A22D96 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2B08833420263FBD00750C9B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2B0883362028D3D400750C9B /* MainTabVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabVC.swift; sourceTree = "<group>"; };
 		2B0883382028D5C900750C9B /* FeedVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedVC.swift; sourceTree = "<group>"; };
 		2B08833A2028D5DF00750C9B /* SearchVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVC.swift; sourceTree = "<group>"; };
@@ -102,6 +101,7 @@
 		A96665CF33227CCD8C42726F /* Pods-InstagramCopy.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramCopy.release.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramCopy/Pods-InstagramCopy.release.xcconfig"; sourceTree = "<group>"; };
 		C3F115830EF5D637CF531FD7 /* Pods-InstagramCopy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InstagramCopy.debug.xcconfig"; path = "Pods/Target Support Files/Pods-InstagramCopy/Pods-InstagramCopy.debug.xcconfig"; sourceTree = "<group>"; };
 		F47F6D373E77DEEF55D0D5C6 /* Pods_InstagramCopy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InstagramCopy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F64CFD4120FBB87100A22D96 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -251,8 +251,8 @@
 				2BF3A4DD2026268F00FC5BA2 /* Controller */,
 				2BF3A4CB2026268000FC5BA2 /* AppDelegate.swift */,
 				2BF3A4CF2026268000FC5BA2 /* Main.storyboard */,
+				F64CFD4120FBB87100A22D96 /* GoogleService-Info.plist */,
 				2BF3A4D22026268000FC5BA2 /* Assets.xcassets */,
-				2B08833420263FBD00750C9B /* GoogleService-Info.plist */,
 				2BF3A4D42026268000FC5BA2 /* LaunchScreen.storyboard */,
 				2BF3A4D72026268000FC5BA2 /* Info.plist */,
 			);
@@ -369,8 +369,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BF3A4D62026268000FC5BA2 /* LaunchScreen.storyboard in Resources */,
+				F64CFD4220FBB87200A22D96 /* GoogleService-Info.plist in Resources */,
 				2BF3A4D32026268000FC5BA2 /* Assets.xcassets in Resources */,
-				2B08833520263FBD00750C9B /* GoogleService-Info.plist in Resources */,
 				2BF3A4D12026268000FC5BA2 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -621,7 +621,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LF78THV97C;
+				DEVELOPMENT_TEAM = 7KXS2AAHE9;
 				INFOPLIST_FILE = InstagramCopy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.StephanDowless.InstagramCopy;
@@ -637,7 +637,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = LF78THV97C;
+				DEVELOPMENT_TEAM = 7KXS2AAHE9;
 				INFOPLIST_FILE = InstagramCopy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.StephanDowless.InstagramCopy;
