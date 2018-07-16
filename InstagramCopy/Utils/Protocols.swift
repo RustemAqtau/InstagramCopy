@@ -47,6 +47,9 @@ protocol MessageInputAccesoryViewDelegate {
     func handleSelectImage()
 }
 
+protocol ChatCellDelegate {
+    func handlePlayVideo(for cell: ChatCell) 
+}
 
 
 
