@@ -229,9 +229,9 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }
     }
     
-    func uploadMessageNotification(forMessage message: Message, isImageMessage: Bool, isVideoMessage: Bool) {
+    func uploadMessageNotification(isImageMessage: Bool, isVideoMessage: Bool) {
         guard let fromId = Auth.auth().currentUser?.uid else { return }
-        guard let toId = message.toId else { return }
+        guard let toId = user?.uid else { return }
         var messageText: String!
         
         if isImageMessage {
@@ -239,7 +239,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         } else if isVideoMessage {
             messageText = "Sent a video"
         } else {
-            messageText = message.messageText
+            messageText = containerView.messageInputTextView.text
         }
         
         let values = ["fromId": fromId,
@@ -266,7 +266,9 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     func sendMessage(withImageUrl imageUrl: String, image: UIImage) {
         let properties = ["imageUrl": imageUrl, "imageWidth": image.size.width as Any, "imageHeight": image.size.height as Any] as [String: AnyObject]
+        
         self.uploadMessageToServer(withProperties: properties)
+        self.uploadMessageNotification(isImageMessage: true, isVideoMessage: false)
     }
     
     func uploadVideoToStorage(withUrl url: URL) {
@@ -284,6 +286,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             self.uploadImageToStorage(selectedImage: thumbnailImage, completion: { (imageUrl) in
                 let properties: [String: AnyObject] = ["imageWidth": thumbnailImage.size.width as AnyObject, "imageHeight": thumbnailImage.size.height as AnyObject, "videoUrl": videoUrl as AnyObject, "imageUrl": imageUrl as AnyObject]
                 self.uploadMessageToServer(withProperties: properties)
+                self.uploadMessageNotification(isImageMessage: false, isVideoMessage: true)
             })
         }
     }
