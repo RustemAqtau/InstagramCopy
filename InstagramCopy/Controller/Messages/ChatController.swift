@@ -201,8 +201,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             USER_MESSAGES_REF.child(user.uid).child(currentUid).updateChildValues([messageRef.key: 1])
         }
         
-//        let message = Message(dictionary: properties as Dictionary<String, AnyObject>)
-//        uploadMessageNotification(forMessage: message, isImageMessage: isImageMessage, isVideoMessage: isVideoMessage)
+        uploadMessageNotification(isImageMessage: false, isVideoMessage: false, isTextMessage: true)
     }
     
     func observeMessages() {
@@ -229,7 +228,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }
     }
     
-    func uploadMessageNotification(isImageMessage: Bool, isVideoMessage: Bool) {
+    func uploadMessageNotification(isImageMessage: Bool, isVideoMessage: Bool, isTextMessage: Bool) {
         guard let fromId = Auth.auth().currentUser?.uid else { return }
         guard let toId = user?.uid else { return }
         var messageText: String!
@@ -238,7 +237,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             messageText = "Sent an image"
         } else if isVideoMessage {
             messageText = "Sent a video"
-        } else {
+        } else if isTextMessage{
             messageText = containerView.messageInputTextView.text
         }
         
@@ -268,7 +267,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let properties = ["imageUrl": imageUrl, "imageWidth": image.size.width as Any, "imageHeight": image.size.height as Any] as [String: AnyObject]
         
         self.uploadMessageToServer(withProperties: properties)
-        self.uploadMessageNotification(isImageMessage: true, isVideoMessage: false)
+        self.uploadMessageNotification(isImageMessage: true, isVideoMessage: false, isTextMessage: false)
     }
     
     func uploadVideoToStorage(withUrl url: URL) {
@@ -286,7 +285,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
             self.uploadImageToStorage(selectedImage: thumbnailImage, completion: { (imageUrl) in
                 let properties: [String: AnyObject] = ["imageWidth": thumbnailImage.size.width as AnyObject, "imageHeight": thumbnailImage.size.height as AnyObject, "videoUrl": videoUrl as AnyObject, "imageUrl": imageUrl as AnyObject]
                 self.uploadMessageToServer(withProperties: properties)
-                self.uploadMessageNotification(isImageMessage: false, isVideoMessage: true)
+                self.uploadMessageNotification(isImageMessage: false, isVideoMessage: true, isTextMessage: false)
             })
         }
     }
