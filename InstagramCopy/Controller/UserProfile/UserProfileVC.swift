@@ -18,13 +18,19 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     
     var user: User?
     var posts = [Post]()
+    var currentKey: String?
+    
+    // MARK: - Init
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Register cell classes
+        // register cell classes
         self.collectionView!.register(UserPostCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         self.collectionView!.register(UserProfileHeader.self, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: headerIdentifier)
+        
+        // configure refresh control
+        configureRefreshControl()
         
         // background color
         self.collectionView?.backgroundColor = .white 
@@ -62,6 +68,15 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
+    
+    override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        
+        if posts.count > 9 {
+            if indexPath.item == posts.count - 1 {
+                fetchPosts()
+            }
+        }
+    }
 
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return posts.count
@@ -96,13 +111,14 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         let feedVC = FeedVC(collectionViewLayout: UICollectionViewFlowLayout())
         
         feedVC.viewSinglePost = true
+        feedVC.userProfileController = self 
         
         feedVC.post = posts[indexPath.item]
         
         navigationController?.pushViewController(feedVC, animated: true)
     }
     
-    // MARK: - UserProfileHeader Protocol
+    // MARK: - UserProfileHeader
     
     func handleFollowersTapped(for header: UserProfileHeader) {
         let followVC = FollowLikeVC()
@@ -123,7 +139,13 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         guard let user = header.user else { return }
         
         if header.editProfileFollowButton.titleLabel?.text == "Edit Profile" {
-            print("Handle edit profile")
+            
+            let editProfileController = EditProfileController()
+            editProfileController.user = user
+            editProfileController.userProfileController = self 
+            let navigationController = UINavigationController(rootViewController: editProfileController)
+            present(navigationController, animated: true, completion: nil)
+            
         } else {
             
             if header.editProfileFollowButton.titleLabel?.text == "Follow" {
@@ -145,7 +167,6 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         
         // get number of followers
         USER_FOLLOWER_REF.child(uid).observe(.value) { (snapshot) in
-            
             if let snapshot = snapshot.value as? Dictionary<String, AnyObject> {
                 numberOfFollwers = snapshot.count
             } else {
@@ -160,7 +181,6 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
         
         // get number of following
         USER_FOLLOWING_REF.child(uid).observe(.value) { (snapshot) in
-            
             if let snapshot = snapshot.value as? Dictionary<String, AnyObject> {
                 numberOfFollowing = snapshot.count
             } else {
@@ -172,6 +192,32 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             
             header.followingLabel.attributedText = attributedText
         }
+        
+        // get number of posts
+        USER_POSTS_REF.child(uid).observeSingleEvent(of: .value) { (snapshot) in
+            guard let snapshot = snapshot.children.allObjects as? [DataSnapshot] else { return }
+            let postCount = snapshot.count
+            
+            let attributedText = NSMutableAttributedString(string: "\(postCount)\n", attributes: [NSAttributedStringKey.font: UIFont.boldSystemFont(ofSize: 14)])
+            attributedText.append(NSAttributedString(string: "posts", attributes: [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 14), NSAttributedStringKey.foregroundColor: UIColor.lightGray]))
+            
+            header.postsLabel.attributedText = attributedText
+        }
+    }
+    
+    // MARK: - Handlers
+    
+    @objc func handleRefresh() {
+        posts.removeAll(keepingCapacity: false)
+        self.currentKey = nil
+        fetchPosts()
+        collectionView?.reloadData()
+    }
+    
+    func configureRefreshControl() {
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        collectionView?.refreshControl = refreshControl
     }
     
     // MARK: - API
@@ -186,20 +232,50 @@ class UserProfileVC: UICollectionViewController, UICollectionViewDelegateFlowLay
             uid = Auth.auth().currentUser?.uid
         }
         
-        USER_POSTS_REF.child(uid).observe(.childAdded) { (snapshot) in
+        // initial data pull
+        if currentKey == nil {
             
-            let postId = snapshot.key
-            
-            Database.fetchPost(with: postId, completion: { (post) in
+            USER_POSTS_REF.child(uid).queryLimited(toLast: 10).observeSingleEvent(of: .value, with: { (snapshot) in
                 
-                self.posts.append(post)
+                self.collectionView?.refreshControl?.endRefreshing()
                 
-                self.posts.sort(by: { (post1, post2) -> Bool in
-                    return post1.creationDate > post2.creationDate
+                guard let first = snapshot.children.allObjects.first as? DataSnapshot else { return }
+                guard let allObjects = snapshot.children.allObjects as? [DataSnapshot] else { return }
+                
+                allObjects.forEach({ (snapshot) in
+                    let postId = snapshot.key
+                    self.fetchPost(withPostId: postId)
                 })
-                
-                self.collectionView?.reloadData()
+                self.currentKey = first.key
             })
+        } else {
+            
+            USER_POSTS_REF.child(uid).queryOrderedByKey().queryEnding(atValue: self.currentKey).queryLimited(toLast: 7).observeSingleEvent(of: .value, with: { (snapshot) in
+                
+                guard let first = snapshot.children.allObjects.first as? DataSnapshot else { return }
+                guard let allObjects = snapshot.children.allObjects as? [DataSnapshot] else { return }
+                
+                allObjects.forEach({ (snapshot) in
+                    let postId = snapshot.key
+                    
+                    if postId != self.currentKey {
+                        self.fetchPost(withPostId: postId)
+                    }
+                })
+                self.currentKey = first.key
+            })
+        }
+    }
+    
+    func fetchPost(withPostId postId: String) {
+        Database.fetchPost(with: postId) { (post) in
+            
+            self.posts.append(post)
+            
+            self.posts.sort(by: { (post1, post2) -> Bool in
+                return post1.creationDate > post2.creationDate
+            })
+            self.collectionView?.reloadData()
         }
     }
     
