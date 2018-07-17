@@ -16,12 +16,12 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
     // MARK: - Properties
     
     var timer: Timer?
-    
     var notifications = [Notification]()
-
+    var refresher = UIRefreshControl()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // clear separator lines
         tableView.separatorColor = .clear
         
@@ -33,14 +33,17 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
         
         // fetch notifications
         fetchNotifications()
+        
+        // refresh control
+        configureRefreshControl()
     }
-
+    
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 60
     }
-
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notifications.count
     }
@@ -57,7 +60,7 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
                 cell.configureNotificationLabel(withCommentText: commentText)
             }
         }
-
+        
         cell.delegate = self
         
         return cell
@@ -109,10 +112,11 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
     
     // MARK: - Handlers
     
-    func handleReloadTable() {
-        self.timer?.invalidate()
-        
-        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(handleSortNotifications), userInfo: nil, repeats: false)
+    @objc func handleRefresh() {
+        self.notifications.removeAll()
+        fetchNotifications()
+        refresher.endRefreshing()
+        self.tableView.reloadData()
     }
     
     @objc func handleSortNotifications() {
@@ -120,6 +124,17 @@ class NotificationsVC: UITableViewController, NotificationCellDelegate {
             return notification1.creationDate > notification2.creationDate
         }
         self.tableView.reloadData()
+    }
+    
+    func handleReloadTable() {
+        self.timer?.invalidate()
+        
+        self.timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(handleSortNotifications), userInfo: nil, repeats: false)
+    }
+    
+    func configureRefreshControl() {
+        refresher.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        self.tableView.refreshControl = refresher
     }
     
     // MARK: - API
