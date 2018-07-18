@@ -194,6 +194,7 @@ class SignUpVC: UIViewController, UIImagePickerControllerDelegate, UINavigationC
                     
                     // configure view controllers in maintabvc
                     mainTabVC.configureViewControllers()
+                    mainTabVC.isInitialLoad = true                                                                                           
                     
                     // dismiss login controller
                     self.dismiss(animated: true, completion: nil)
