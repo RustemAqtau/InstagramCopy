@@ -42,7 +42,6 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         
         if isInitialLoad != nil {
             self.followeUserAfterSignUp(uid: "Rdqzc9WWv3OoQkzYrWgFVTuwwUu2")
-            self.showExploreFeedForNewUsers()
         }
     }
     
@@ -134,13 +133,8 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         if let isInitialLoad = isInitialLoad, isInitialLoad == true {
             Database.fetchUser(with: uid) { (user) in
                 user.follow()
+                self.selectedIndex = 1
             }
-        }
-    }
-    
-    func showExploreFeedForNewUsers() {
-        if let isInitialLoad = isInitialLoad, isInitialLoad == true {
-            self.selectedIndex = 1
         }
     }
     
