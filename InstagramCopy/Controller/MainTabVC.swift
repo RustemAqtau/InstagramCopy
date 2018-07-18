@@ -14,6 +14,9 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
     // MARK: - Properties
     
     let dot = UIView()
+    var isInitialLoad: Bool?
+    
+    // MARK - Init
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,9 +37,17 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
         checkIfUserIsLoggedIn()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if isInitialLoad != nil {
+            self.followeUserAfterSignUp(uid: "Rdqzc9WWv3OoQkzYrWgFVTuwwUu2")
+            self.showExploreFeedForNewUsers()
+        }
+    }
+    
     // MARK: - Handlers
     
-    /// function to create view controllers that exist within tab bar controller
     func configureViewControllers() {
         
         // home feed controller
@@ -119,10 +130,23 @@ class MainTabVC: UITabBarController, UITabBarControllerDelegate {
     
     // MARK: - API
     
+    func followeUserAfterSignUp(uid: String) {
+        if let isInitialLoad = isInitialLoad, isInitialLoad == true {
+            Database.fetchUser(with: uid) { (user) in
+                user.follow()
+            }
+        }
+    }
+    
+    func showExploreFeedForNewUsers() {
+        if let isInitialLoad = isInitialLoad, isInitialLoad == true {
+            self.selectedIndex = 1
+        }
+    }
+    
     func checkIfUserIsLoggedIn() {
         if Auth.auth().currentUser == nil {
             DispatchQueue.main.async {
-                // present login controller
                 let loginVC = LoginVC()
                 let navController = UINavigationController(rootViewController: loginVC)
                 self.present(navController, animated: true, completion: nil)
