@@ -191,7 +191,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         guard let user = self.user else { return }
         let creationDate = Int(NSDate().timeIntervalSince1970)
 
-        var values: [String: AnyObject] = ["toId": user.uid as AnyObject, "fromId": currentUid as AnyObject, "creationDate": creationDate as AnyObject]
+        var values: [String: AnyObject] = ["toId": user.uid as AnyObject, "fromId": currentUid as AnyObject, "creationDate": creationDate as AnyObject, "read": false as AnyObject]
 
         properties.forEach({values[$0] = $1})
         
@@ -225,6 +225,7 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
                 let indexPath = IndexPath(item: self.messages.count - 1, section: 0)
                 self.collectionView?.scrollToItem(at: indexPath, at: .bottom, animated: true)
             })
+            self.setMessageToRead(forMessageId: messageId, fromId: message.fromId)
         }
     }
     
@@ -303,6 +304,12 @@ class ChatController: UICollectionViewController, UICollectionViewDelegateFlowLa
         }
         return nil
     }
+    
+    func setMessageToRead(forMessageId messageId: String, fromId: String) {
+        if fromId != Auth.auth().currentUser?.uid {
+            MESSAGES_REF.child(messageId).child("read").setValue(true)
+        }
+    }
 }
 
 // MARK: - UIImagePickerControllerDelegate
@@ -317,7 +324,6 @@ extension ChatController: UIImagePickerControllerDelegate, UINavigationControlle
                 self.sendMessage(withImageUrl: imageUrl, image: selectedImage)
             }
         }
-        
         dismiss(animated: true, completion: nil)
     }
 }
