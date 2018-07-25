@@ -19,6 +19,7 @@ class Message {
     var imageHeight: NSNumber?
     var imageWidth: NSNumber?
     var videoUrl: String?
+    var read: Bool!
     
     init(dictionary: Dictionary<String, AnyObject>) {
         
@@ -52,6 +53,10 @@ class Message {
         
         if let videoUrl = dictionary["videoUrl"] as? String {
             self.videoUrl = videoUrl
+        }
+        
+        if let read = dictionary["read"] as? Bool {
+            self.read = read 
         }
     }
     
