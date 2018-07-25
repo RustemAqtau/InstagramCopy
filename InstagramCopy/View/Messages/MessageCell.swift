@@ -18,7 +18,15 @@ class MessageCell: UITableViewCell {
         didSet {
             
             guard let messageText = message?.messageText else { return }
-            detailTextLabel?.text = messageText
+            guard let read = message?.read else { return }
+            
+            if !read {
+                messageTextLabel.font = UIFont.boldSystemFont(ofSize: 12)
+            } else {
+                messageTextLabel.font = UIFont.systemFont(ofSize: 12)
+            }
+            
+            messageTextLabel.text = messageText
 
             if let seconds = message?.creationDate {
                 let dateFormatter = DateFormatter()
@@ -28,7 +36,6 @@ class MessageCell: UITableViewCell {
             
             configureUserData()
         }
-        
     }
     
     let profileImageView: CustomImageView = {
@@ -47,10 +54,22 @@ class MessageCell: UITableViewCell {
         return label
     }()
     
+    let usernameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 12)
+        return label
+    }()
+    
+    let messageTextLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 12)
+        return label
+    }()
+    
     // MARK: - Init
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
-        super.init(style: .subtitle, reuseIdentifier: reuseIdentifier)
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         selectionStyle = .none
     
@@ -59,24 +78,26 @@ class MessageCell: UITableViewCell {
         profileImageView.layer.cornerRadius = 50 / 2
         profileImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
+        addSubview(usernameLabel)
+        usernameLabel.anchor(top: profileImageView.topAnchor, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 4, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
+        addSubview(messageTextLabel)
+        messageTextLabel.anchor(top: usernameLabel.bottomAnchor, left: profileImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 6, paddingLeft: 8, paddingBottom: 0, paddingRight: 0, width: 0, height: 0)
+        
         addSubview(timestampLabel)
         timestampLabel.anchor(top: topAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 20, paddingLeft: 0, paddingBottom: 0, paddingRight: 12, width: 0, height: 0)
-        
-        textLabel?.text = "Joker"
-        detailTextLabel?.text = "Some test label to see if this works"
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        textLabel?.frame = CGRect(x: 68, y: textLabel!.frame.origin.y - 2, width: textLabel!.frame.width, height: (textLabel!.frame.height))
-        
-        detailTextLabel?.frame = CGRect(x: 68, y: detailTextLabel!.frame.origin.y + 2, width: self.frame.width - 108, height: (detailTextLabel?.frame.height)!)
-        
-        textLabel?.font = UIFont.boldSystemFont(ofSize: 12)
-        
-        detailTextLabel?.font = UIFont.systemFont(ofSize: 12)
-        detailTextLabel?.textColor = .lightGray
+//        textLabel?.frame = CGRect(x: 68, y: textLabel!.frame.origin.y - 2, width: textLabel!.frame.width, height: (textLabel!.frame.height))
+//
+//        detailTextLabel?.frame = CGRect(x: 68, y: detailTextLabel!.frame.origin.y + 2, width: self.frame.width - 108, height: (detailTextLabel?.frame.height)!)
+//
+//        textLabel?.font = UIFont.boldSystemFont(ofSize: 12)
+//
+//        detailTextLabel?.textColor = .lightGray
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -91,7 +112,7 @@ class MessageCell: UITableViewCell {
         
         Database.fetchUser(with: chatPartnerId) { (user) in
             self.profileImageView.loadImage(with: user.profileImageUrl)
-            self.textLabel?.text = user.username
+            self.usernameLabel.text = user.username
         }
     }
 }
