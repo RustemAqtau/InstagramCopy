@@ -77,8 +77,10 @@ class MessagesController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let message = messages[indexPath.row]
         let chatPartnerId = message.getChatPartnerId()
+        let cell = tableView.cellForRow(at: indexPath) as! MessageCell
         Database.fetchUser(with: chatPartnerId) { (user) in
             self.showChatController(forUser: user)
+            cell.messageTextLabel.font = UIFont.systemFont(ofSize: 12)
         }
     }
     
@@ -113,19 +115,17 @@ class MessagesController: UITableViewController {
         self.tableView.reloadData()
         
         USER_MESSAGES_REF.child(currentUid).observe(.childAdded) { (snapshot) in
-            
             let uid = snapshot.key
             
             USER_MESSAGES_REF.child(currentUid).child(uid).observe(.childAdded, with: { (snapshot) in
-                
                 let messageId = snapshot.key
-                
                 self.fetchMessage(withMessageId: messageId)
             })
         }
     }
     
     func fetchMessage(withMessageId messageId: String) {
+        
         MESSAGES_REF.child(messageId).observeSingleEvent(of: .value) { (snapshot) in
             guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
             
