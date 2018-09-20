@@ -51,6 +51,12 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setUnreadMessageCount()
+    }
+    
     // MARK: - UICollectionViewFlowLayout
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -143,7 +149,6 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
             }))
             
             alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            
             present(alertController, animated: true, completion: nil)
         }
     }
@@ -261,19 +266,22 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     func configureNavigationBar() {
         if !viewSinglePost {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
-        }
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2"), style: .plain, target: self, action: #selector(handleShowMessages))
-        
-        getUnreadMessageCount { (unreadMessageCount) in
-            guard unreadMessageCount != 0 else { return }
-            self.navigationController?.navigationBar.addSubview(self.messageNotificationView)
-            self.messageNotificationView.anchor(top: self.navigationController?.navigationBar.topAnchor, left: nil, bottom: nil, right: self.navigationController?.navigationBar.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 4, width: 20, height: 20)
-            self.messageNotificationView.layer.cornerRadius = 20 / 2
-            self.messageNotificationView.notificationLabel.text = "\(unreadMessageCount)"
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2"), style: .plain, target: self, action: #selector(handleShowMessages))
         }
         
         self.navigationItem.title = "Feed"
+    }
+    
+    func setUnreadMessageCount() {
+        if !viewSinglePost {
+            getUnreadMessageCount { (unreadMessageCount) in
+                guard unreadMessageCount != 0 else { return }
+                self.navigationController?.navigationBar.addSubview(self.messageNotificationView)
+                self.messageNotificationView.anchor(top: self.navigationController?.navigationBar.topAnchor, left: nil, bottom: nil, right: self.navigationController?.navigationBar.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 4, width: 20, height: 20)
+                self.messageNotificationView.layer.cornerRadius = 20 / 2
+                self.messageNotificationView.notificationLabel.text = "\(unreadMessageCount)"
+            }
+        }
     }
     
     @objc func handleLogout() {
@@ -351,7 +359,7 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     
     func getUnreadMessageCount(withCompletion completion: @escaping(Int) -> ()) {
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
-        var unreadCount = 0
+        var unreadCount = 0 
         
         USER_MESSAGES_REF.child(currentUid).observe(.childAdded) { (snapshot) in
             let uid = snapshot.key
