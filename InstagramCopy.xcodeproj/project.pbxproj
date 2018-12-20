@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		238B8BA021CC241100BBFAE5 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8B9D21CC241100BBFAE5 /* NewMessageController.swift */; };
+		238B8BA121CC241100BBFAE5 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8B9E21CC241100BBFAE5 /* MessagesController.swift */; };
+		238B8BA221CC241100BBFAE5 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8B9F21CC241100BBFAE5 /* ChatController.swift */; };
+		238B8BA921CC245000BBFAE5 /* MessageInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8BA321CC245000BBFAE5 /* MessageInputTextView.swift */; };
+		238B8BAA21CC245000BBFAE5 /* MessageNotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8BA421CC245000BBFAE5 /* MessageNotificationView.swift */; };
+		238B8BAB21CC245000BBFAE5 /* NewMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8BA521CC245000BBFAE5 /* NewMessageCell.swift */; };
+		238B8BAC21CC245000BBFAE5 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8BA621CC245000BBFAE5 /* ChatCell.swift */; };
+		238B8BAD21CC245000BBFAE5 /* MessageInputAccesoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8BA721CC245000BBFAE5 /* MessageInputAccesoryView.swift */; };
+		238B8BAE21CC245000BBFAE5 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238B8BA821CC245000BBFAE5 /* MessageCell.swift */; };
+		23C8859921CC1781005F767D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 23C8859821CC1781005F767D /* GoogleService-Info.plist */; };
 		2B05C6A3207E712700FADDCC /* EditProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05C6A2207E712700FADDCC /* EditProfileController.swift */; };
 		2B05C6A6207E8F3000FADDCC /* CommentInputAccesoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05C6A5207E8F3000FADDCC /* CommentInputAccesoryView.swift */; };
 		2B05C6A8207E8F4900FADDCC /* CommentInputTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B05C6A7207E8F4900FADDCC /* CommentInputTextView.swift */; };
@@ -28,14 +38,7 @@
 		2B08836B202E041600750C9B /* SelectPhotoHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B08836A202E041600750C9B /* SelectPhotoHeader.swift */; };
 		2B40D4C6203C8BCD004CC403 /* NotificationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B40D4C5203C8BCD004CC403 /* NotificationCell.swift */; };
 		2B40D4C8203D01DB004CC403 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B40D4C7203D01DB004CC403 /* Notification.swift */; };
-		2B40EE3F20F65EA6003402BF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2B40EE3E20F65EA5003402BF /* GoogleService-Info.plist */; };
-		2B4E2D19206C24CE00940036 /* MessagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D18206C24CE00940036 /* MessagesController.swift */; };
-		2B4E2D1C206C265E00940036 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D1B206C265E00940036 /* MessageCell.swift */; };
-		2B4E2D1E206C325400940036 /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D1D206C325400940036 /* NewMessageController.swift */; };
-		2B4E2D20206C32CD00940036 /* NewMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D1F206C32CD00940036 /* NewMessageCell.swift */; };
 		2B4E2D22206C377100940036 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D21206C377100940036 /* Message.swift */; };
-		2B4E2D24206C3A9300940036 /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D23206C3A9300940036 /* ChatController.swift */; };
-		2B4E2D26206C3B6200940036 /* ChatCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D25206C3B6200940036 /* ChatCell.swift */; };
 		2B4E2D29206C786D00940036 /* HashtagController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D28206C786D00940036 /* HashtagController.swift */; };
 		2B4E2D2B206C792700940036 /* HashtagCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B4E2D2A206C792700940036 /* HashtagCell.swift */; };
 		2B9A870F2043B9CF008FA235 /* SearchPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9A870E2043B9CF008FA235 /* SearchPostCell.swift */; };
@@ -57,6 +60,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		238B8B9D21CC241100BBFAE5 /* NewMessageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewMessageController.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/Controller/Messages/NewMessageController.swift; sourceTree = "<group>"; };
+		238B8B9E21CC241100BBFAE5 /* MessagesController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessagesController.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/Controller/Messages/MessagesController.swift; sourceTree = "<group>"; };
+		238B8B9F21CC241100BBFAE5 /* ChatController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatController.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/Controller/Messages/ChatController.swift; sourceTree = "<group>"; };
+		238B8BA321CC245000BBFAE5 /* MessageInputTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageInputTextView.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/View/Messages/MessageInputTextView.swift; sourceTree = "<group>"; };
+		238B8BA421CC245000BBFAE5 /* MessageNotificationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageNotificationView.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/View/Messages/MessageNotificationView.swift; sourceTree = "<group>"; };
+		238B8BA521CC245000BBFAE5 /* NewMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NewMessageCell.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/View/Messages/NewMessageCell.swift; sourceTree = "<group>"; };
+		238B8BA621CC245000BBFAE5 /* ChatCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChatCell.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/View/Messages/ChatCell.swift; sourceTree = "<group>"; };
+		238B8BA721CC245000BBFAE5 /* MessageInputAccesoryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageInputAccesoryView.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/View/Messages/MessageInputAccesoryView.swift; sourceTree = "<group>"; };
+		238B8BA821CC245000BBFAE5 /* MessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MessageCell.swift; path = ../../../../../../Desktop/Desktop/InstagramCopy/InstagramCopy/View/Messages/MessageCell.swift; sourceTree = "<group>"; };
+		23C8859821CC1781005F767D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		2B05C6A2207E712700FADDCC /* EditProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditProfileController.swift; sourceTree = "<group>"; };
 		2B05C6A5207E8F3000FADDCC /* CommentInputAccesoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputAccesoryView.swift; sourceTree = "<group>"; };
 		2B05C6A7207E8F4900FADDCC /* CommentInputTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentInputTextView.swift; sourceTree = "<group>"; };
@@ -79,14 +92,7 @@
 		2B08836A202E041600750C9B /* SelectPhotoHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotoHeader.swift; sourceTree = "<group>"; };
 		2B40D4C5203C8BCD004CC403 /* NotificationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCell.swift; sourceTree = "<group>"; };
 		2B40D4C7203D01DB004CC403 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
-		2B40EE3E20F65EA5003402BF /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../Documents/GoogleService-Info.plist"; sourceTree = "<group>"; };
-		2B4E2D18206C24CE00940036 /* MessagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessagesController.swift; sourceTree = "<group>"; };
-		2B4E2D1B206C265E00940036 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
-		2B4E2D1D206C325400940036 /* NewMessageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
-		2B4E2D1F206C32CD00940036 /* NewMessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewMessageCell.swift; sourceTree = "<group>"; };
 		2B4E2D21206C377100940036 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		2B4E2D23206C3A9300940036 /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
-		2B4E2D25206C3B6200940036 /* ChatCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatCell.swift; sourceTree = "<group>"; };
 		2B4E2D28206C786D00940036 /* HashtagController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashtagController.swift; sourceTree = "<group>"; };
 		2B4E2D2A206C792700940036 /* HashtagCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HashtagCell.swift; sourceTree = "<group>"; };
 		2B9A870E2043B9CF008FA235 /* SearchPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchPostCell.swift; sourceTree = "<group>"; };
@@ -207,9 +213,9 @@
 		2B4E2D17206C24AA00940036 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				2B4E2D18206C24CE00940036 /* MessagesController.swift */,
-				2B4E2D1D206C325400940036 /* NewMessageController.swift */,
-				2B4E2D23206C3A9300940036 /* ChatController.swift */,
+				238B8B9F21CC241100BBFAE5 /* ChatController.swift */,
+				238B8B9E21CC241100BBFAE5 /* MessagesController.swift */,
+				238B8B9D21CC241100BBFAE5 /* NewMessageController.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -217,9 +223,12 @@
 		2B4E2D1A206C264500940036 /* Messages */ = {
 			isa = PBXGroup;
 			children = (
-				2B4E2D1B206C265E00940036 /* MessageCell.swift */,
-				2B4E2D1F206C32CD00940036 /* NewMessageCell.swift */,
-				2B4E2D25206C3B6200940036 /* ChatCell.swift */,
+				238B8BA621CC245000BBFAE5 /* ChatCell.swift */,
+				238B8BA821CC245000BBFAE5 /* MessageCell.swift */,
+				238B8BA721CC245000BBFAE5 /* MessageInputAccesoryView.swift */,
+				238B8BA321CC245000BBFAE5 /* MessageInputTextView.swift */,
+				238B8BA421CC245000BBFAE5 /* MessageNotificationView.swift */,
+				238B8BA521CC245000BBFAE5 /* NewMessageCell.swift */,
 			);
 			path = Messages;
 			sourceTree = "<group>";
@@ -272,7 +281,7 @@
 				2BF3A4CF2026268000FC5BA2 /* Main.storyboard */,
 				2BF3A4D22026268000FC5BA2 /* Assets.xcassets */,
 				2BF3A4D42026268000FC5BA2 /* LaunchScreen.storyboard */,
-				2B40EE3E20F65EA5003402BF /* GoogleService-Info.plist */,
+				23C8859821CC1781005F767D /* GoogleService-Info.plist */,
 				2BF3A4D72026268000FC5BA2 /* Info.plist */,
 			);
 			path = InstagramCopy;
@@ -393,7 +402,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2BF3A4D62026268000FC5BA2 /* LaunchScreen.storyboard in Resources */,
-				2B40EE3F20F65EA6003402BF /* GoogleService-Info.plist in Resources */,
+				23C8859921CC1781005F767D /* GoogleService-Info.plist in Resources */,
 				2BF3A4D32026268000FC5BA2 /* Assets.xcassets in Resources */,
 				2BF3A4D12026268000FC5BA2 /* Main.storyboard in Resources */,
 			);
@@ -474,26 +483,29 @@
 				2B05C6A3207E712700FADDCC /* EditProfileController.swift in Sources */,
 				2B08836B202E041600750C9B /* SelectPhotoHeader.swift in Sources */,
 				2BAB4B9C202E35BF00985674 /* CustomImageView.swift in Sources */,
+				238B8BA121CC241100BBFAE5 /* MessagesController.swift in Sources */,
 				2B088359202BEC4000750C9B /* Protocols.swift in Sources */,
 				2B08834B2029079300750C9B /* UserProfileHeader.swift in Sources */,
-				2B4E2D1C206C265E00940036 /* MessageCell.swift in Sources */,
 				2B4E2D2B206C792700940036 /* HashtagCell.swift in Sources */,
 				2BAB4B9E202E400500985674 /* FeedCell.swift in Sources */,
-				2B4E2D19206C24CE00940036 /* MessagesController.swift in Sources */,
 				2B9B185F20376B0F00B52A0D /* CommentVC.swift in Sources */,
+				238B8BA921CC245000BBFAE5 /* MessageInputTextView.swift in Sources */,
 				2B0883392028D5C900750C9B /* FeedVC.swift in Sources */,
 				2B08833F2028D61700750C9B /* NotificationsVC.swift in Sources */,
 				2B9A870F2043B9CF008FA235 /* SearchPostCell.swift in Sources */,
-				2B4E2D20206C32CD00940036 /* NewMessageCell.swift in Sources */,
 				2B08833D2028D5FA00750C9B /* UploadPostVC.swift in Sources */,
 				2B088363202CE42E00750C9B /* FollowLikeVC.swift in Sources */,
-				2B4E2D1E206C325400940036 /* NewMessageController.swift in Sources */,
+				238B8BAA21CC245000BBFAE5 /* MessageNotificationView.swift in Sources */,
+				238B8BA021CC241100BBFAE5 /* NewMessageController.swift in Sources */,
+				238B8BAC21CC245000BBFAE5 /* ChatCell.swift in Sources */,
 				2B088369202E03F700750C9B /* SelectPhotoCell.swift in Sources */,
 				2B088355202B625800750C9B /* SearchUserCell.swift in Sources */,
 				2B9B186120376BB300B52A0D /* CommentCell.swift in Sources */,
 				2BAB4B98202E270C00985674 /* UserPostCell.swift in Sources */,
 				2B0883412028D62700750C9B /* UserProfileVC.swift in Sources */,
+				238B8BA221CC241100BBFAE5 /* ChatController.swift in Sources */,
 				2BF3A4E62026332B00FC5BA2 /* SignUpVC.swift in Sources */,
+				238B8BAE21CC245000BBFAE5 /* MessageCell.swift in Sources */,
 				2B05C6A8207E8F4900FADDCC /* CommentInputTextView.swift in Sources */,
 				2BAB4B96202E22F100985674 /* Post.swift in Sources */,
 				2BF3A4E1202626CD00FC5BA2 /* LoginVC.swift in Sources */,
@@ -501,17 +513,17 @@
 				2B40D4C6203C8BCD004CC403 /* NotificationCell.swift in Sources */,
 				2B05C6A6207E8F3000FADDCC /* CommentInputAccesoryView.swift in Sources */,
 				2B40D4C8203D01DB004CC403 /* Notification.swift in Sources */,
+				238B8BAB21CC245000BBFAE5 /* NewMessageCell.swift in Sources */,
 				2B4E2D22206C377100940036 /* Message.swift in Sources */,
 				2BF3A4E42026283E00FC5BA2 /* Extensions.swift in Sources */,
-				2B4E2D26206C3B6200940036 /* ChatCell.swift in Sources */,
 				2B08835120292F1900750C9B /* User.swift in Sources */,
 				2B0883372028D3D400750C9B /* MainTabVC.swift in Sources */,
+				238B8BAD21CC245000BBFAE5 /* MessageInputAccesoryView.swift in Sources */,
 				2B088357202BD7F100750C9B /* Constants.swift in Sources */,
 				2BF3A4CC2026268000FC5BA2 /* AppDelegate.swift in Sources */,
 				2B9B186320377E9A00B52A0D /* Comment.swift in Sources */,
 				2B08833B2028D5DF00750C9B /* SearchVC.swift in Sources */,
 				2B4E2D29206C786D00940036 /* HashtagController.swift in Sources */,
-				2B4E2D24206C3A9300940036 /* ChatController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

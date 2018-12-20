@@ -22,13 +22,17 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     var currentKey: String?
     var userProfileController: UserProfileVC?
     
+    var messageNotificationView: MessageNotificationView = {
+        let view = MessageNotificationView()
+        return view
+    }()
+    
     // MARK: - Init
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
         collectionView?.backgroundColor = .white
-
+        
         // register cell classes
         self.collectionView!.register(FeedCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
@@ -40,12 +44,16 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
         // configure logout button
         configureNavigationBar()
         
-        setUserFCMToken()
-        
         // fetch posts
         if !viewSinglePost {
             fetchPosts()
         }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        setUnreadMessageCount()
     }
     
     // MARK: - UICollectionViewFlowLayout
@@ -55,12 +63,11 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
         let width = view.frame.width
         var height = width + 8 + 40 + 8
         height += 50
-        height += 60 
+        height += 60
         
         return CGSize(width: width, height: height)
-        
     }
-
+    
     // MARK: - UICollectionViewDataSource
     
     override func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -70,20 +77,19 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
             }
         }
     }
-
+    
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        
         if viewSinglePost {
             return 1
         } else {
             return posts.count
         }
     }
-
+    
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! FeedCell
         
@@ -98,15 +104,13 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
         }
         
         handleHashtagTapped(forCell: cell)
-        
         handleUsernameLabelTapped(forCell: cell)
-        
         handleMentionTapped(forCell: cell)
         
         return cell
     }
     
-    // MARK: - FeedCellDelegate Protocol
+    // MARK: - FeedCellDelegate
     
     func handleUsernameTapped(for cell: FeedCell) {
         guard let post = cell.post else { return }
@@ -116,7 +120,6 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     }
     
     func handleOptionsTapped(for cell: FeedCell) {
-        
         guard let post = cell.post else { return }
         
         if post.ownerUid == Auth.auth().currentUser?.uid {
@@ -142,11 +145,9 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
                 uploadPostController.postToEdit = post
                 uploadPostController.uploadAction = UploadPostVC.UploadAction(index: 1)
                 self.present(navigationController, animated: true, completion: nil)
-                
             }))
             
             alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-            
             present(alertController, animated: true, completion: nil)
         }
     }
@@ -192,6 +193,22 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
             if snapshot.hasChild(postId) {
                 post.didLike = true
                 cell.likeButton.setImage(#imageLiteral(resourceName: "like_selected"), for: .normal)
+            } else {
+                post.didLike = false
+                cell.likeButton.setImage(#imageLiteral(resourceName: "like_unselected"), for: .normal)
+            }
+        }
+    }
+    
+    func configureCommentIndicatorView(for cell: FeedCell) {
+        guard let post = cell.post else { return }
+        guard let postId = post.postId else { return }
+        
+        COMMENT_REF.child(postId).observeSingleEvent(of: .value) { (snapshot) in
+            if snapshot.exists() {
+                cell.addCommentIndicatorView(toStackView: cell.stackView)
+            } else {
+                cell.commentIndicatorView.isHidden = true
             }
         }
     }
@@ -214,13 +231,14 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     
     @objc func handleShowMessages() {
         let messagesController = MessagesController()
+        self.messageNotificationView.isHidden = true
         navigationController?.pushViewController(messagesController, animated: true)
     }
     
     func handleHashtagTapped(forCell cell: FeedCell) {
         cell.captionLabel.handleHashtagTap { (hashtag) in
             let hashtagController = HashtagController(collectionViewLayout: UICollectionViewFlowLayout())
-            hashtagController.hashtag = hashtag
+            hashtagController.hashtag = hashtag.lowercased()
             self.navigationController?.pushViewController(hashtagController, animated: true)
         }
     }
@@ -247,41 +265,39 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     func configureNavigationBar() {
         if !viewSinglePost {
             self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2"), style: .plain, target: self, action: #selector(handleShowMessages))
         }
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: #imageLiteral(resourceName: "send2"), style: .plain, target: self, action: #selector(handleShowMessages))
         
         self.navigationItem.title = "Feed"
     }
     
+    func setUnreadMessageCount() {
+        if !viewSinglePost {
+            getUnreadMessageCount { (unreadMessageCount) in
+                guard unreadMessageCount != 0 else { return }
+                self.navigationController?.navigationBar.addSubview(self.messageNotificationView)
+                self.messageNotificationView.anchor(top: self.navigationController?.navigationBar.topAnchor, left: nil, bottom: nil, right: self.navigationController?.navigationBar.rightAnchor, paddingTop: 0, paddingLeft: 0, paddingBottom: 0, paddingRight: 4, width: 20, height: 20)
+                self.messageNotificationView.layer.cornerRadius = 20 / 2
+                self.messageNotificationView.notificationLabel.text = "\(unreadMessageCount)"
+            }
+        }
+    }
+    
     @objc func handleLogout() {
-       
-        // declare alert controller
         let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        // add alert log out action
         alertController.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { (_) in
             
             do {
-                // attempt sign out
                 try Auth.auth().signOut()
-                
-                // present login controller
                 let loginVC = LoginVC()
                 let navController = UINavigationController(rootViewController: loginVC)
                 self.present(navController, animated: true, completion: nil)
-                
-                print("Successfully logged user out")
-                
             } catch {
-                // handle error
                 print("Failed to sign out")
             }
         }))
         
-        // add cancel action
         alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
-        
         present(alertController, animated: true, completion: nil)
     }
     
@@ -300,9 +316,7 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
         guard let currentUid = Auth.auth().currentUser?.uid else { return }
         
         if currentKey == nil {
-            
             USER_FEED_REF.child(currentUid).queryLimited(toLast: 5).observeSingleEvent(of: .value, with: { (snapshot) in
-                
                 self.collectionView?.refreshControl?.endRefreshing()
                 
                 guard let first = snapshot.children.allObjects.first as? DataSnapshot else { return }
@@ -332,15 +346,39 @@ class FeedVC: UICollectionViewController, UICollectionViewDelegateFlowLayout, Fe
     }
     
     func fetchPost(withPostId postId: String) {
-        
         Database.fetchPost(with: postId) { (post) in
-            
             self.posts.append(post)
             
             self.posts.sort(by: { (post1, post2) -> Bool in
                 return post1.creationDate > post2.creationDate
             })
             self.collectionView?.reloadData()
+        }
+    }
+    
+    func getUnreadMessageCount(withCompletion completion: @escaping(Int) -> ()) {
+        guard let currentUid = Auth.auth().currentUser?.uid else { return }
+        var unreadCount = 0
+        
+        USER_MESSAGES_REF.child(currentUid).observe(.childAdded) { (snapshot) in
+            let uid = snapshot.key
+            
+            USER_MESSAGES_REF.child(currentUid).child(uid).observe(.childAdded, with: { (snapshot) in
+                let messageId = snapshot.key
+                
+                MESSAGES_REF.child(messageId).observeSingleEvent(of: .value) { (snapshot) in
+                    guard let dictionary = snapshot.value as? Dictionary<String, AnyObject> else { return }
+                    
+                    let message = Message(dictionary: dictionary)
+                    
+                    if message.fromId != currentUid {
+                        if !message.read  {
+                            unreadCount += 1
+                        }
+                    }
+                    completion(unreadCount)
+                }
+            })
         }
     }
 }

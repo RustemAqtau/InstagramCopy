@@ -26,6 +26,7 @@ protocol FeedCellDelegate {
     func handleCommentTapped(for cell: FeedCell)
     func handleConfigureLikeButton(for cell: FeedCell)
     func handleShowLikes(for cell: FeedCell)
+    func configureCommentIndicatorView(for cell: FeedCell)
 }
 
 protocol NotificationCellDelegate {
@@ -39,6 +40,19 @@ protocol Printable {
 
 protocol CommentInputAccesoryViewDelegate {
     func didSubmit(forComment comment: String)
+}
+
+protocol MessageCellDelegate {
+    func configureUserData(for cell: MessageCell)
+}
+
+protocol ChatCellDelegate {
+    func handlePlayVideo(for cell: ChatCell)
+}
+
+protocol MessageInputAccesoryViewDelegate {
+    func handleUploadMessage(message: String)
+    func handleSelectImage()
 }
 
 

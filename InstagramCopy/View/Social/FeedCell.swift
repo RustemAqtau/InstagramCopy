@@ -13,6 +13,7 @@ import ActiveLabel
 class FeedCell: UICollectionViewCell {
     
     var delegate: FeedCellDelegate?
+    var stackView: UIStackView!
     
     var post: Post? {
         
@@ -31,8 +32,8 @@ class FeedCell: UICollectionViewCell {
             
             likesLabel.text = "\(likes) likes"
             configureLikeButton()
+            configureCommentIndicatorView()
         }
-        
     }
     
     let profileImageView: CustomImageView = {
@@ -134,6 +135,12 @@ class FeedCell: UICollectionViewCell {
         return label
     }()
     
+    let commentIndicatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .red
+        return view
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -196,6 +203,10 @@ class FeedCell: UICollectionViewCell {
         delegate?.handleConfigureLikeButton(for: self)
     }
     
+    func configureCommentIndicatorView() {
+        delegate?.configureCommentIndicatorView(for: self)
+    }
+    
     func configurePostCaption(user: User) {
         
         guard let post = self.post else { return }
@@ -233,7 +244,7 @@ class FeedCell: UICollectionViewCell {
     
     func configureActionButtons() {
         
-        let stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, messageButton])
+        stackView = UIStackView(arrangedSubviews: [likeButton, commentButton, messageButton])
         
         stackView.axis = .horizontal
         stackView.distribution = .fillEqually
@@ -244,6 +255,15 @@ class FeedCell: UICollectionViewCell {
         addSubview(savePostButton)
         savePostButton.anchor(top: postImageView.bottomAnchor, left: nil, bottom: nil, right: rightAnchor, paddingTop: 12, paddingLeft: 0, paddingBottom: 0, paddingRight: 8, width: 20, height: 24)
         
+    }
+    
+    func addCommentIndicatorView(toStackView stackView: UIStackView) {
+        
+        commentIndicatorView.isHidden = false
+        
+        stackView.addSubview(commentIndicatorView)
+        commentIndicatorView.anchor(top: stackView.topAnchor, left: stackView.leftAnchor, bottom: nil, right: nil, paddingTop: 14, paddingLeft: 64, paddingBottom: 0, paddingRight: 0, width: 10, height: 10)
+        commentIndicatorView.layer.cornerRadius = 10 / 2
     }
     
     required init?(coder aDecoder: NSCoder) {
